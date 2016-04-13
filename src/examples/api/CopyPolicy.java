@@ -16,7 +16,7 @@ import com.ibm.itim.apps.AuthorizationException;
 import com.ibm.itim.apps.PlatformContext;
 import com.ibm.itim.apps.SchemaViolationException;
 import com.ibm.itim.apps.identity.OrganizationalContainerMO;
-import com.ibm.itim.apps.policy.ProvisioningPolicy;
+//import com.ibm.itim.apps.policy.ProvisioningPolicy;
 import com.ibm.itim.apps.policy.ProvisioningPolicyManager;
 import com.ibm.itim.apps.provisioning.AccountManager;
 import com.ibm.itim.apps.search.SearchMO;
@@ -26,6 +26,8 @@ import com.ibm.itim.common.AttributeValues;
 import com.ibm.itim.dataservices.model.CompoundDN;
 import com.ibm.itim.dataservices.model.DistinguishedName;
 import com.ibm.itim.dataservices.model.ObjectProfileCategory;
+import com.ibm.itim.dataservices.model.policy.Entitlement;
+import com.ibm.itim.dataservices.model.policy.ProvisioningPolicy;
 
 /**
  * Sample command-line Java class to change an account.
@@ -146,7 +148,7 @@ public class CopyPolicy {
 					}
 				}
 			}
-			AccountManager accMgr = new AccountManager(platform, subject);
+	//		AccountManager accMgr = new AccountManager(platform, subject);
 
 			utils.print("userName;" + "serviceName;" + "complianceStatus;"
 					+ "attrName;" + "attrChangeOperation;" + "oldValue;"
@@ -166,14 +168,15 @@ public class CopyPolicy {
 					.hasNext();) {
 				ProvisioningPolicy policy = iterator.next();
 
-				Collection entNew = policy.getEntitlements();
+				Collection <Entitlement>entNew = policy.getEntitlements();
 				AttributeValues avExist = policy.getAttributes();
 				AttributeValues aValues = null;
 				Collection memberships = policy.getMemberships();
 				String parentDnStr = avExist.get("erparent").getValueString();
-				for (Iterator iterator2 = entNew.iterator(); iterator2
+				for (Iterator iterator2 = avExist.iterator(); iterator2
 						.hasNext();) {
 					AttributeValue attr = (AttributeValue) iterator2.next();
+					System.out.println("Attr: " + attr.getName()+", value = "+attr.getValueString());
 					AttributeValue newAV = null;
 					newAV.setName(attr.getName());
 					newAV.addValues(attr.getValues());
